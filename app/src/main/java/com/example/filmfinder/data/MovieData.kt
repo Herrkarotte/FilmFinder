@@ -1,8 +1,9 @@
 package com.example.filmfinder.data
 
+import com.google.gson.annotations.SerializedName
+
 data class MovieData(
-    val id: Int,
-    val name: String,
-    val info: String,
-    val rating: Double
+    @SerializedName("kinopoiskId") val id: Int,
+    @SerializedName("nameRu")val name: String?,
+    @SerializedName("ratingGoodReview")val ratingGoodReview: Double?
 )
