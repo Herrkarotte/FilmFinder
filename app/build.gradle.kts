@@ -50,6 +50,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.json.converter)
 
+    implementation(libs.coil.compose)
+    implementation(libs.coil.okhttp)
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
