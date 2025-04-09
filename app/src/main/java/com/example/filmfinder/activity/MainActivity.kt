@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
 
@@ -41,117 +42,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             FilmFinderTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    FilmsListScreen()
+                    AppNavigation()
                 }
             }
         }
     }
 }
 
-@Composable
-fun FilmsListScreen() {
-    var films by remember { mutableStateOf<List<Movie>?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<String?>(null) }
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = {
-                loadFilms(
-                    onLoading = { isLoading = true },
-                    onSuccess = { filmList ->
-                        films = filmList
-                        isLoading = false
-                        error = null
-                    },
-                    onError = { errorMessage ->
-                        error = errorMessage
-                        isLoading = false
-                        films = null
-                    }
-                )
-            },
-            enabled = !isLoading
-        ) {
-            Text("Get top films!")
-        }
-        when {
-            isLoading -> CircularProgressIndicator()
-            error != null -> ErrorMessage(error = error!!)
-            films != null -> {
-                if (films!!.isEmpty()) {
-                    Text("Список пуст")
-                } else {
-                    FilmsList(films = films!!)
-                }
-            }
-        }
-
-    }
-}
-
-fun loadFilms(
-    onLoading: () -> Unit,
-    onSuccess: (List<Movie>) -> Unit,
-    onError: (String) -> Unit
-) {
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            onLoading()
-            val response = RetrofitInterface.api.getFilmsList(
-                apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b"
-            )
-            val films = response.movies ?: emptyList()
-            withContext(Dispatchers.Main) {
-                if (films.isNotEmpty()) {
-                    onSuccess(films)
-                } else {
-                    onError("Список пуст")
-                }
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                onError(e.message ?: "Ошибка загрузки")
-            }
-        }
-    }
-}
-
-@Composable
-fun FilmsList(films: List<Movie>) {
-    LazyColumn(modifier = Modifier.navigationBarsPadding()) {
-        items(films) { film -> FilmsItem(film) }
-    }
-}
-
-@Composable
-fun FilmsItem(film: Movie) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-    )
-    {
-        Column {
-            Text(
-                film.name ?: "Имя отсутствует"
-            )
-            Text(
-                film.originalName?:"Оригинального имени нет"
-            )
-        }
-    }
-}
-
-@Composable
-fun ErrorMessage(error: String) {
-    Text(
-        text = "Ошибка $error"
-    )
-}
 
 
 
