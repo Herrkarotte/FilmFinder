@@ -4,7 +4,7 @@ import com.example.filmfinder.api.KinopoiskApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitInterface {
+object Retrofit {
     private const val BASE_URL = "https://kinopoiskapiunofficial.tech"
     private val retrofit by lazy {
         Retrofit.Builder()

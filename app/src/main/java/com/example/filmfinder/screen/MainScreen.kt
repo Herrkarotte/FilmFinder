@@ -17,39 +17,28 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.filmfinder.data.Movie
-import com.example.filmfinder.retrofit.RetrofitInterface
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.filmfinder.viewmodel.MainViewModel
+import com.example.filmfinder.viewmodel.MainViewModelFactory
 import navigation.Screen
 
 @Composable
 fun MainScreen(navController: NavController) {
-    var films by remember { mutableStateOf<List<Movie>?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(Unit) {
-        loadFilms(onLoading = { isLoading = true }, onSuccess = { filmList ->
-            films = filmList
-            isLoading = false
-            error = null
-        }, onError = { errorMessage ->
-            error = errorMessage
-            isLoading = false
-            films = null
-        })
-    }
+    val viewModel: MainViewModel = viewModel(factory = MainViewModelFactory())
+    val filmsState = viewModel.films
+    val isLoadingState = viewModel.isLoading
+    val errorState = viewModel.error
+
+    LaunchedEffect(Unit) { viewModel.loadFilms() }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,42 +47,17 @@ fun MainScreen(navController: NavController) {
     ) {
 
         when {
-            isLoading -> CircularProgressIndicator()
-            error != null -> ErrorMessage(error = error!!)
-            films != null -> {
-                if (films!!.isEmpty()) {
+            isLoadingState.value -> CircularProgressIndicator()
+            errorState.value != null -> ErrorMessage(error = errorState.value!!)
+            filmsState.value != null -> {
+                if (filmsState.value == null) {
                     Text("Список пуст")
                 } else {
-                    FilmsList(films = films!!, navController)
+                    FilmsList(films = filmsState.value!!, navController)
                 }
             }
         }
 
-    }
-}
-
-fun loadFilms(
-    onLoading: () -> Unit, onSuccess: (List<Movie>) -> Unit, onError: (String) -> Unit
-) {
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            onLoading()
-            val response = RetrofitInterface.api.getFilmsList(
-                apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b"
-            )
-            val films = response.movies ?: emptyList()
-            withContext(Dispatchers.Main) {
-                if (films.isNotEmpty()) {
-                    onSuccess(films)
-                } else {
-                    onError("Список пуст")
-                }
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                onError(e.message ?: "Ошибка загрузки")
-            }
-        }
     }
 }
 
@@ -106,11 +70,11 @@ fun FilmsList(films: List<Movie>, navController: NavController) {
 
 @Composable
 fun FilmsItem(film: Movie, navController: NavController) {
-
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
+            .shadow(10.dp, shape = RectangleShape)
             .clickable {
                 navController.navigate(Screen.DetailsScreen.createRout(film.id))
             }) {

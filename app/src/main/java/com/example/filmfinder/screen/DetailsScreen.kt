@@ -9,43 +9,30 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.filmfinder.data.Movie
-import com.example.filmfinder.retrofit.RetrofitInterface
+import com.example.filmfinder.viewmodel.DetailsViewModel
+import com.example.filmfinder.viewmodel.DetailsViewModelFactory
 
 @Composable
 fun DetailsScreen(
     id: Int, onBack: () -> Unit
 ) {
-    var film by remember { mutableStateOf<Movie?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var error by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(id) {
-        try {
-            val response = RetrofitInterface.api.getFilm(
-                id = id, apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b"
-            )
-            film = response
-            isLoading = false
-        } catch (e: Exception) {
-            error = e.message ?: "Ошибка загрузки"
-            isLoading = false
-        }
-    }
+    val viewModel: DetailsViewModel = viewModel(factory = DetailsViewModelFactory())
+    val filmState = viewModel.movie
+    val isLoadingState = viewModel.isLoading
+    val errorState = viewModel.error
+    LaunchedEffect(id) { viewModel.loadMovie(id) }
     when {
-        isLoading -> CircularProgressIndicator()
-        error != null -> ErrorMessage(
-            error = error!!
+        isLoadingState.value -> CircularProgressIndicator()
+        errorState.value != null -> ErrorMessage(
+            error = errorState.value!!
         )
 
-        film != null -> FilmDetail(film = film!!, onBack)
+        filmState.value != null -> FilmDetail(film = filmState.value!!, onBack)
     }
 
 }
