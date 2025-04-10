@@ -8,4 +8,7 @@ sealed class Screen(val route: String) {
         Screen("details_screen/{id}") {
         fun createRout(id: Int) = "details_screen/$id"
     }
+
+    object FavoritesScreen :
+        Screen("favorites_screen")
 }
