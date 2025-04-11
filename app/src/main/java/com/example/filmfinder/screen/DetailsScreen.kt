@@ -45,7 +45,6 @@ fun DetailsScreen(
         errorState.value != null -> ErrorMessage(
             error = errorState.value!!
         )
-
         filmState.value != null -> FilmDetail(film = filmState.value!!, onBack)
     }
 
