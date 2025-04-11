@@ -11,12 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -24,6 +22,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.example.filmfinder.data.Movie
 import com.example.filmfinder.viewmodel.MainViewModel
@@ -33,12 +34,7 @@ import navigation.Screen
 @Composable
 fun MainScreen(navController: NavController) {
     val viewModel: MainViewModel = viewModel(factory = MainViewModelFactory())
-    val filmsState = viewModel.films
-    val isLoadingState = viewModel.isLoading
-    val errorState = viewModel.error
-
-    LaunchedEffect(Unit) { viewModel.loadFilms() }
-
+    val films = viewModel.filmsPagingFlow.collectAsLazyPagingItems()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -47,14 +43,19 @@ fun MainScreen(navController: NavController) {
     ) {
 
         when {
-            isLoadingState.value -> CircularProgressIndicator()
-            errorState.value != null -> ErrorMessage(error = errorState.value!!)
-            filmsState.value != null -> {
-                if (filmsState.value == null) {
-                    Text("Список пуст")
-                } else {
-                    FilmsList(films = filmsState.value!!, navController)
-                }
+            films.loadState.refresh is LoadState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            films.loadState.refresh is LoadState.Error -> {
+                ErrorMessage(
+                    error = (films.loadState.refresh as LoadState.Error).error.message
+                        ?: "Неизвестная ошибка"
+                )
+            }
+
+            else -> {
+                FilmsList(films = films, navController)
             }
         }
 
@@ -62,9 +63,13 @@ fun MainScreen(navController: NavController) {
 }
 
 @Composable
-fun FilmsList(films: List<Movie>, navController: NavController) {
+fun FilmsList(films: LazyPagingItems<Movie>, navController: NavController) {
     LazyColumn(modifier = Modifier.navigationBarsPadding()) {
-        items(films) { film -> FilmsItem(film, navController) }
+        items(films.itemCount) { index ->
+            films[index]?.let { film ->
+                FilmsItem(film, navController)
+            }
+        }
     }
 }
 
@@ -94,7 +99,6 @@ fun FilmsItem(film: Movie, navController: NavController) {
         }
     }
 }
-
 
 @Composable
 private fun ErrorMessage(error: String) {

@@ -51,6 +51,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.json.converter)
 
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
     implementation(libs.coil.compose)
     implementation(libs.coil.okhttp)
 

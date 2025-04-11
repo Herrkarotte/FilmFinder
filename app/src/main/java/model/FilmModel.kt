@@ -1,16 +1,23 @@
 package model
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.filmfinder.api.KinopoiskApiService
 import com.example.filmfinder.data.Movie
-import com.example.filmfinder.data.MovieList
+import kotlinx.coroutines.flow.Flow
 
 class FilmModel(private val api: KinopoiskApiService) {
-    suspend fun getFilmList(): MovieList {
-        val response = api.getFilmsList(
-            apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b"
-        )
-        return response
-
+    fun getFilms(): Flow<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                PagingSource(api)
+            }
+        ).flow
     }
 
     suspend fun getFilm(id: Int): Movie {

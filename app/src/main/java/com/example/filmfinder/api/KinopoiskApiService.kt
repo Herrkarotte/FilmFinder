@@ -17,8 +17,7 @@ interface KinopoiskApiService {
     @GET("/api/v2.2/films/collections")
     suspend fun getFilmsList(
         @Header("X-API-KEY") apiKey: String,
-        @Query("page") page: Int = 1,
-        @Query("type") type: String = "VAMPIRE_THEME"
+        @Query("page") page: Int,
+        @Query("type") type: String = "TOP_POPULAR_ALL"
     ): MovieList
-
 }
