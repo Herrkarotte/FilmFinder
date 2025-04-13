@@ -4,10 +4,11 @@ package com.example.filmfinder.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,16 +47,15 @@ fun MainScreen(navController: NavController) {
     Scaffold(
         bottomBar = {
             BottomAppBar(
+                modifier = Modifier.height(100.dp),
                 actions = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        IconButton(onClick = {
-                            navController.navigate(Screen.FavoritesScreen.route)
-                        }, modifier = Modifier.size(40.dp)) {
-                            Icon(Icons.Filled.FavoriteBorder, contentDescription = "Избранное",modifier = Modifier.size(40.dp))
-                        }
+                    IconButton(onClick = {
+                        navController.navigate(Screen.FavoritesScreen.route)
+                    }) {
+                        Icon(
+                            Icons.Filled.FavoriteBorder,
+                            contentDescription = "Избранное"
+                        )
                     }
                 }
             )
@@ -89,7 +89,7 @@ fun MainScreen(navController: NavController) {
 
 @Composable
 fun FilmsList(films: LazyPagingItems<Movie>, navController: NavController) {
-    LazyColumn() {
+    LazyColumn {
         items(films.itemCount) { index ->
             films[index]?.let { film ->
                 FilmsItem(film, navController)
