@@ -8,7 +8,7 @@
 - MVVM
 
 ### Основные компоненты.
--Compose.
--Retrofit.
--Paging.
--Room.
+- Compose.
+- Retrofit.
+- Paging.
+- Room.
