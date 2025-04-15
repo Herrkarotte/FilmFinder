@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.filmfinder.data.Movie
+import com.example.filmfinder.data.MovieItem
 
-@Database(entities = [Movie::class], version = 1, exportSchema = false)
+@Database(entities = [MovieItem::class], version = 1, exportSchema = false)
 abstract class MovieDatabase : RoomDatabase() {
     abstract val movieDao: MovieDao
 

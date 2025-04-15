@@ -4,13 +4,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.filmfinder.data.Movie
+import com.example.filmfinder.data.MovieItem
 import kotlinx.coroutines.launch
 import model.FilmModel
 
 class DetailsViewModel(private val model: FilmModel) : ViewModel() {
-    private val _movie = mutableStateOf<Movie?>(null)
-    val movie: State<Movie?> = _movie
+    private val _movie = mutableStateOf<MovieItem?>(null)
+    val movie: State<MovieItem?> = _movie
 
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading

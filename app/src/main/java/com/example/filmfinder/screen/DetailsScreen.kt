@@ -27,7 +27,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
-import com.example.filmfinder.data.Movie
+import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.viewmodel.DetailsViewModel
 import com.example.filmfinder.viewmodel.DetailsViewModelFactory
 
@@ -45,12 +45,14 @@ fun DetailsScreen(
         errorState.value != null -> ErrorMessage(
             error = errorState.value!!
         )
+
         filmState.value != null -> FilmDetail(film = filmState.value!!, onBack)
     }
 
 }
+
 @Composable
-fun FilmDetail(film: Movie, onBack: () -> Unit) {
+fun FilmDetail(film: MovieItem, onBack: () -> Unit) {
     val scrollBehavior =
         TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
