@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import com.example.filmfinder.ui.theme.FilmFinderTheme
 import navigation.AppNavigation
 
@@ -14,16 +12,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             FilmFinderTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    AppNavigation()
-                }
+                AppNavigation()
             }
         }
     }
 }
-
-
-
-

@@ -6,10 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -58,7 +61,9 @@ fun MainScreen(navController: NavController) {
             Search(
                 query = searchQuery,
                 onChange = viewModel::onSearchQueryChanged,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.statusBars)
+                    .fillMaxWidth()
             )
         },
         bottomBar = {
@@ -146,7 +151,7 @@ fun Search(query: String, onChange: (String) -> Unit, modifier: Modifier = Modif
     OutlinedTextField(
         value = query,
         onValueChange = onChange,
-        modifier = modifier.padding(20.dp),
+        modifier = modifier,
         placeholder = { Text("Поиск по ключевому слову") },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = "поиск") },
         singleLine = true

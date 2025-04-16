@@ -3,9 +3,13 @@
 package com.example.filmfinder.screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -25,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
@@ -56,7 +61,9 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit) {
     val scrollBehavior =
         TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .windowInsetsPadding(WindowInsets.statusBars),
         topBar = {
             TopAppBar(
                 title = {
@@ -87,6 +94,7 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit) {
         Column(
             modifier = Modifier
                 .padding(innerPadding)
+                .windowInsetsPadding(WindowInsets.systemBars)
                 .verticalScroll(rememberScrollState())
         ) {
             AsyncImage(
@@ -98,13 +106,16 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit) {
             )
 
             Text(
-                text = "Описание: ${film.description ?: "Без описания"}"
+                text = "Описание: ${film.description ?: "Без описания"}",
+                fontSize = 17.sp
             )
             Text(
-                text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: " " }}"
+                text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: " " }}",
+                fontSize = 17.sp
             )
             Text(
-                "Страна производства: ${film.countries.joinToString(", ") { it.country ?: " " }}"
+                "Страна производства: ${film.countries.joinToString(", ") { it.country ?: " " }}",
+                fontSize = 17.sp
             )
 
         }
