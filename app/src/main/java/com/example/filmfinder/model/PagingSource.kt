@@ -1,4 +1,4 @@
-package model
+package com.example.filmfinder.model
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

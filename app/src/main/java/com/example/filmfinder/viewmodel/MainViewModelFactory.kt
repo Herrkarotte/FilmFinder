@@ -3,7 +3,7 @@ package com.example.filmfinder.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.filmfinder.retrofit.Retrofit
-import model.FilmModel
+import com.example.filmfinder.model.FilmModel
 
 class MainViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

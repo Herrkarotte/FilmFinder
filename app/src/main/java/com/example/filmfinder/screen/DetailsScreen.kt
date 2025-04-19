@@ -106,7 +106,7 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit) {
             )
 
             Text(
-                text = "Описание: ${film.description ?: "Без описания"}",
+                text = "Описание: ${film.description ?: " - "}",
                 fontSize = 17.sp
             )
             Text(

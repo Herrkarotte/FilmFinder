@@ -44,7 +44,7 @@ import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.viewmodel.MainViewModel
 import com.example.filmfinder.viewmodel.MainViewModelFactory
-import navigation.Screen
+import com.example.filmfinder.navigation.Screen
 
 @Composable
 fun MainScreen(navController: NavController) {

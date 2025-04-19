@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
-import model.FilmModel
+import com.example.filmfinder.model.FilmModel
 
 class MainViewModel(private val model: FilmModel) : ViewModel() {
     private val _searchQuery = MutableStateFlow("")

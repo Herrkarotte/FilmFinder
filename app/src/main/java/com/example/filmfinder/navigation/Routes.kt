@@ -1,4 +1,4 @@
-package navigation
+package com.example.filmfinder.navigation
 
 sealed class Screen(val route: String) {
     object MainScreen :

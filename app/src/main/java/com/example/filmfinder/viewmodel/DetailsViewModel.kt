@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.filmfinder.data.MovieItem
 import kotlinx.coroutines.launch
-import model.FilmModel
+import com.example.filmfinder.model.FilmModel
 
 class DetailsViewModel(private val model: FilmModel) : ViewModel() {
     private val _movie = mutableStateOf<MovieItem?>(null)

@@ -1,4 +1,4 @@
-package model
+package com.example.filmfinder.model
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig

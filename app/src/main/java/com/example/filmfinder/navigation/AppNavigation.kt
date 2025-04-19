@@ -1,4 +1,4 @@
-package navigation
+package com.example.filmfinder.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
