@@ -42,9 +42,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
+import com.example.filmfinder.navigation.Screen
 import com.example.filmfinder.viewmodel.MainViewModel
 import com.example.filmfinder.viewmodel.MainViewModelFactory
-import com.example.filmfinder.navigation.Screen
 
 @Composable
 fun MainScreen(navController: NavController) {
@@ -130,13 +130,13 @@ fun FilmsItem(film: MovieItem, navController: NavController) {
                 navController.navigate(Screen.DetailsScreen.createRout(film.id))
             }) {
         Row(horizontalArrangement = Arrangement.Start) {
-            AsyncImage(
-                model = film.posterUrlPreview, contentDescription = film.name,
-                modifier = Modifier.size(150.dp)
-            )
+//            AsyncImage(
+//                model = film.posterUrlPreview, contentDescription = film.name,
+//                modifier = Modifier.size(150.dp)
+//            )
             Column {
                 Text(
-                    film.name ?: "Имя отсутствует"
+                    film.name ?: film.nameOriginal ?: ""
                 )
                 Text(
                     "Год создания ${film.year.toString()}"
