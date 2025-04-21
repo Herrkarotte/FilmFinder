@@ -7,8 +7,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class FavModel(private val movieDao: MovieDao) {
-    fun getFavor(): Flow<List<MovieItem.Movie>> =
-        movieDao.getAllMovies().map { list -> list.map { it.toMovieItem() } }
+    fun getFavors(): Flow<List<MovieItem.Movie>> {
+        val response = movieDao.getAllMovies().map { movie -> movie.map { it.toMovieItem() } }
+        return response
+    }
+
+    suspend fun getFavoriteMovie(movieId: Int): MovieItem.Movie? {
+        return movieDao.getMovieById(movieId)?.toMovieItem()
+    }
 
     suspend fun addToFavor(movie: MovieItem) {
         movieDao.insert(MovieEntity.fromMovieItem(movie))

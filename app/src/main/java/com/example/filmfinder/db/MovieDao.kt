@@ -18,6 +18,9 @@ interface MovieDao {
     @Query("SELECT * FROM favorite_movies")
     fun getAllMovies(): Flow<List<MovieEntity>>
 
+    @Query("SELECT * FROM favorite_movies WHERE movieId = :movieId")
+    suspend fun getMovieById(movieId: Int): MovieEntity?
+
     @Query("SELECT EXISTS(SELECT * FROM favorite_movies WHERE movieId = :movieId)")
     suspend fun isFavorite(movieId: Int): Boolean
 }

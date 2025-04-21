@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.filmfinder.screen.DetailsScreen
+import com.example.filmfinder.screen.FavDetailsScreen
 import com.example.filmfinder.screen.FavoritesScreen
 import com.example.filmfinder.screen.MainScreen
 
@@ -34,7 +35,16 @@ fun AppNavigation() {
         composable(Screen.FavoritesScreen.route) { BackStackEntry ->
             FavoritesScreen(onBack = {
                 navController.popBackStack()
+            },navController)
+        }
+        composable(
+            Screen.FavDetailsScreen.route,
+            arguments = listOf(navArgument("movieId") {
+                type = NavType.IntType
             })
+        ) { backStackEntry ->
+            val movieId = backStackEntry.arguments?.getInt("movieId") ?: 0
+            FavDetailsScreen(movieId = movieId, onBack = { navController.popBackStack() })
         }
     }
 }

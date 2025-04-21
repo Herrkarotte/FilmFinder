@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,11 +39,10 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.navigation.Screen
 import com.example.filmfinder.viewmodel.MainViewModel
-import com.example.filmfinder.viewmodel.MainViewModelFactory
+import com.example.filmfinder.factory.MainViewModelFactory
 
 @Composable
 fun MainScreen(navController: NavController) {

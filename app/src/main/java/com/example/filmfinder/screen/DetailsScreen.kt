@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,20 +27,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.filmfinder.data.MovieItem
+import com.example.filmfinder.db.MovieDatabase
+import com.example.filmfinder.factory.DetailsViewModelFactory
 import com.example.filmfinder.viewmodel.DetailsViewModel
-import com.example.filmfinder.viewmodel.DetailsViewModelFactory
 
 @Composable
 fun DetailsScreen(
     id: Int, onBack: () -> Unit
 ) {
-    val viewModel: DetailsViewModel = viewModel(factory = DetailsViewModelFactory())
+    val context = LocalContext.current
+    val dao = MovieDatabase.getInstance(context).movieDao
+    val viewModel: DetailsViewModel = viewModel(factory = DetailsViewModelFactory(dao))
     val filmState = viewModel.movie
     val isLoadingState = viewModel.isLoading
     val errorState = viewModel.error
+    val isFavorState = viewModel.isFavor
+
+
     LaunchedEffect(id) { viewModel.loadMovie(id) }
     when {
         isLoadingState.value -> CircularProgressIndicator()
@@ -47,13 +55,18 @@ fun DetailsScreen(
             error = errorState.value!!
         )
 
-        filmState.value != null -> FilmDetail(film = filmState.value!!, onBack)
+        filmState.value != null -> FilmDetail(
+            film = filmState.value!!,
+            onBack,
+            addFavor = { viewModel.toggleFavor() },
+            isFavorState.value
+        )
     }
 
 }
 
 @Composable
-fun FilmDetail(film: MovieItem, onBack: () -> Unit) {
+fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavor: Boolean) {
     val scrollBehavior =
         TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
@@ -76,9 +89,9 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit) {
                     }
                 },
                 actions = {
-                    IconButton(onClick = { TODO() }) {
+                    IconButton(onClick = addFavor) {
                         Icon(
-                            imageVector = Icons.Filled.FavoriteBorder,
+                            imageVector = if (isFavor) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             contentDescription = "Добавить в избранное"
                         )
                     }
