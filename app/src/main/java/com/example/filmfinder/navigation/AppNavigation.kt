@@ -21,10 +21,8 @@ fun AppNavigation() {
             MainScreen(navController = navController)
         }
         composable(
-            route = Screen.DetailsScreen.route,
-            arguments = listOf(navArgument("id") {
-                type =
-                    NavType.IntType
+            route = Screen.DetailsScreen.route, arguments = listOf(navArgument("id") {
+                type = NavType.IntType
             })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getInt("id") ?: 0
@@ -35,11 +33,10 @@ fun AppNavigation() {
         composable(Screen.FavoritesScreen.route) { BackStackEntry ->
             FavoritesScreen(onBack = {
                 navController.popBackStack()
-            },navController)
+            }, navController)
         }
         composable(
-            Screen.FavDetailsScreen.route,
-            arguments = listOf(navArgument("movieId") {
+            Screen.FavDetailsScreen.route, arguments = listOf(navArgument("movieId") {
                 type = NavType.IntType
             })
         ) { backStackEntry ->

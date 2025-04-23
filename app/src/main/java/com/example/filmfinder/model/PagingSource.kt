@@ -10,8 +10,7 @@ class PagingSource(private val apiService: KinopoiskApiService) : PagingSource<I
         return try {
             val page = params.key ?: 1
             val response = apiService.getFilmsList(
-                apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b",
-                page = page
+                apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b", page = page
             )
             LoadResult.Page(
                 data = response.movies,
@@ -38,9 +37,7 @@ class SearchPagingSource(private val apiService: KinopoiskApiService, private va
         return try {
             val page = params.key ?: 1
             val response = apiService.searchFilms(
-                apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b",
-                page = page,
-                keyword = query
+                apiKey = "e30ffed0-76ab-4dd6-b41f-4c9da2b2735b", page = page, keyword = query
             )
             LoadResult.Page(
                 data = response.movies,

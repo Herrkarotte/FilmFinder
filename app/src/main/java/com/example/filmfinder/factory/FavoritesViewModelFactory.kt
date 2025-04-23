@@ -6,10 +6,11 @@ import com.example.filmfinder.db.MovieDao
 import com.example.filmfinder.model.FavModel
 import com.example.filmfinder.viewmodel.FavoritesViewModel
 
-class FavoritesViewModelFactory(private val dao:MovieDao) : ViewModelProvider.Factory {
+class FavoritesViewModelFactory(private val dao: MovieDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(FavoritesViewModel::class.java))
-            return FavoritesViewModel(FavModel(dao)) as T
+        if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) return FavoritesViewModel(
+            FavModel(dao)
+        ) as T
         throw IllegalArgumentException("Unknown ViewModel")
     }
 }

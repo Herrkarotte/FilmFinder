@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.filmfinder.db.MovieDao
 import com.example.filmfinder.model.FavModel
-import com.example.filmfinder.retrofit.Retrofit
 import com.example.filmfinder.model.FilmModel
+import com.example.filmfinder.retrofit.Retrofit
 import com.example.filmfinder.viewmodel.DetailsViewModel
 
 class DetailsViewModelFactory(private val dao: MovieDao) : ViewModelProvider.Factory {

@@ -23,8 +23,7 @@ class FavoritesViewModel(private val model: FavModel) : ViewModel() {
         job = viewModelScope.launch {
             _error.value = null
             try {
-                model.getFavors()
-                    .collect { movies ->
+                model.getFavors().collect { movies ->
                         _favorMovies.value = movies
                     }
             } catch (e: Exception) {

@@ -68,8 +68,7 @@ fun DetailsScreen(
 
 @Composable
 fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavor: Boolean) {
-    val scrollBehavior =
-        TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -77,28 +76,25 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavo
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = film.name ?: film.nameOriginal ?: ""
+                Text(
+                    text = film.name ?: film.nameOriginal ?: ""
+                )
+            }, navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Назад"
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = addFavor) {
-                        Icon(
-                            imageVector = if (isFavor) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                            tint = if (isFavor) Color.Red else Color.Black,
-                            contentDescription = "Добавить в избранное"
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior
+                }
+            }, actions = {
+                IconButton(onClick = addFavor) {
+                    Icon(
+                        imageVector = if (isFavor) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        tint = if (isFavor) Color.Red else Color.Black,
+                        contentDescription = "Добавить в избранное"
+                    )
+                }
+            }, scrollBehavior = scrollBehavior
             )
         },
     ) { innerPadding ->
@@ -117,8 +113,7 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavo
 //            )
 
             Text(
-                text = "Описание: ${film.description ?: " - "}",
-                fontSize = 17.sp
+                text = "Описание: ${film.description ?: " - "}", fontSize = 17.sp
             )
             Text(
                 text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: " " }}",

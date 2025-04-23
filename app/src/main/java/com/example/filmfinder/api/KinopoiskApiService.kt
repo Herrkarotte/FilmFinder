@@ -10,8 +10,7 @@ import retrofit2.http.Query
 interface KinopoiskApiService {
     @GET("/api/v2.2/films/{id}")
     suspend fun getFilm(
-        @Path("id") id: Int,
-        @Header("X-API-KEY") apiKey: String
+        @Path("id") id: Int, @Header("X-API-KEY") apiKey: String
     ): MovieItem.Movie
 
     @GET("/api/v2.2/films/collections")

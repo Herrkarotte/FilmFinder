@@ -66,39 +66,35 @@ fun MainScreen(navController: NavController) {
     LaunchedEffect(snackbarMessage) {
         snackbarMessage?.let { message ->
             snackbarHostState.showSnackbar(
-                message = message,
-                withDismissAction = true,
-                duration = SnackbarDuration.Short
+                message = message, withDismissAction = true, duration = SnackbarDuration.Short
             )
             viewModel.clearSnackbar()
         }
     }
 
 
-    Scaffold(
-        modifier = Modifier.clickable {
-            focusManager.clearFocus()
-        }, snackbarHost ={SnackbarHost(snackbarHostState)},
-        topBar = {
-            Search(
-                query = searchQuery,
-                onChange = viewModel::onSearchQueryChanged,
-                modifier = Modifier
-                    .windowInsetsPadding(WindowInsets.statusBars)
-                    .fillMaxWidth()
-            )
-        }, bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.height(100.dp), actions = {
-                    IconButton(onClick = {
-                        navController.navigate(Screen.FavoritesScreen.route)
-                    }) {
-                        Icon(
-                            Icons.Filled.FavoriteBorder, contentDescription = "Избранное"
-                        )
-                    }
-                })
-        }) { innerPadding ->
+    Scaffold(modifier = Modifier.clickable {
+        focusManager.clearFocus()
+    }, snackbarHost = { SnackbarHost(snackbarHostState) }, topBar = {
+        Search(
+            query = searchQuery,
+            onChange = viewModel::onSearchQueryChanged,
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .fillMaxWidth()
+        )
+    }, bottomBar = {
+        BottomAppBar(
+            modifier = Modifier.height(100.dp), actions = {
+                IconButton(onClick = {
+                    navController.navigate(Screen.FavoritesScreen.route)
+                }) {
+                    Icon(
+                        Icons.Filled.FavoriteBorder, contentDescription = "Избранное"
+                    )
+                }
+            })
+    }) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally

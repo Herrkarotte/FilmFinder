@@ -11,20 +11,13 @@ import com.google.gson.reflect.TypeToken
 
 @Entity(tableName = "favorite_movies")
 data class MovieEntity(
-    @PrimaryKey(autoGenerate = false)
-    val movieId: Int,
-    @ColumnInfo("nameRu")
-    val movieName: String?,
-    @ColumnInfo("nameOriginal")
-    val nameOriginal: String?,
-    @ColumnInfo("year")
-    val year: String?,
-    @ColumnInfo("description")
-    val description: String?,
-    @ColumnInfo("countries")
-    val countries: String?,
-    @ColumnInfo("genres")
-    val genres: String?
+    @PrimaryKey(autoGenerate = false) val movieId: Int,
+    @ColumnInfo("nameRu") val movieName: String?,
+    @ColumnInfo("nameOriginal") val nameOriginal: String?,
+    @ColumnInfo("year") val year: String?,
+    @ColumnInfo("description") val description: String?,
+    @ColumnInfo("countries") val countries: String?,
+    @ColumnInfo("genres") val genres: String?
 ) {
     companion object {
         fun fromMovieItem(movie: MovieItem): MovieEntity {
@@ -47,8 +40,7 @@ data class MovieEntity(
         val countriesList: List<Countries> =
             countries?.let { Gson().fromJson(it, type) } ?: emptyList()
         val genretype = object : TypeToken<List<Genres>>() {}.type
-        val genresList: List<Genres> =
-            genres?.let { Gson().fromJson(it, genretype) } ?: emptyList()
+        val genresList: List<Genres> = genres?.let { Gson().fromJson(it, genretype) } ?: emptyList()
 
         return MovieItem.Movie(
             id = this.movieId,

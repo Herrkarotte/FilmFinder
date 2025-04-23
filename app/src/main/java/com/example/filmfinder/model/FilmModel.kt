@@ -11,13 +11,10 @@ class FilmModel(private val api: KinopoiskApiService) {
     fun getFilms(): Flow<PagingData<MovieItem>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 20,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
+                pageSize = 20, enablePlaceholders = false
+            ), pagingSourceFactory = {
                 PagingSource(api)
-            }
-        ).flow
+            }).flow
     }
 
     suspend fun getFilm(id: Int): MovieItem {
@@ -30,13 +27,10 @@ class FilmModel(private val api: KinopoiskApiService) {
     fun searchFilms(query: String): Flow<PagingData<MovieItem>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 20,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = {
+                pageSize = 20, enablePlaceholders = false
+            ), pagingSourceFactory = {
                 SearchPagingSource(api, query)
-            }
-        ).flow
+            }).flow
     }
 }
 

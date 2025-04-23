@@ -35,8 +35,7 @@ import com.example.filmfinder.viewmodel.FavDetailsViewModel
 
 @Composable
 fun FavDetailsScreen(
-    movieId: Int,
-    onBack: () -> Unit
+    movieId: Int, onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val dao = MovieDatabase.getInstance(context).movieDao
@@ -62,34 +61,29 @@ fun FavFilmDetail(film: MovieItem, onBack: () -> Unit, deleteFromFavor: () -> Un
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .windowInsetsPadding(WindowInsets.statusBars),
-        topBar = {
+            .windowInsetsPadding(WindowInsets.statusBars), topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = film.name ?: film.nameOriginal ?: ""
+                Text(
+                    text = film.name ?: film.nameOriginal ?: ""
+                )
+            }, navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Назад"
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = deleteFromFavor) {
-                        Icon(
-                            imageVector = Icons.Filled.Delete,
-                            contentDescription = "Удалить из избранного"
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior
+                }
+            }, actions = {
+                IconButton(onClick = deleteFromFavor) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = "Удалить из избранного"
+                    )
+                }
+            }, scrollBehavior = scrollBehavior
             )
-        }
-    ) { innerPadding ->
+        }) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -97,8 +91,7 @@ fun FavFilmDetail(film: MovieItem, onBack: () -> Unit, deleteFromFavor: () -> Un
                 .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Описание: ${film.description ?: "-"}",
-                fontSize = 17.sp
+                text = "Описание: ${film.description ?: "-"}", fontSize = 17.sp
             )
             Text(
                 text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: "" }}",
