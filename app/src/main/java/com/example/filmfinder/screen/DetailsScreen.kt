@@ -26,6 +26,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
@@ -92,6 +93,7 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavo
                     IconButton(onClick = addFavor) {
                         Icon(
                             imageVector = if (isFavor) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            tint = if (isFavor) Color.Red else Color.Black,
                             contentDescription = "Добавить в избранное"
                         )
                     }
