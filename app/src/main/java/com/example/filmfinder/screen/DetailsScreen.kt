@@ -118,14 +118,14 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavo
                 text = "Описание: ${film.description ?: " - "}",
                 fontSize = 17.sp
             )
-//            Text(
-//                text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: " " }}",
-//                fontSize = 17.sp
-//            )
-//            Text(
-//                "Страна производства: ${film.countries.joinToString(", ") { it.country ?: " " }}",
-//                fontSize = 17.sp
-//            )
+            Text(
+                text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: " " }}",
+                fontSize = 17.sp
+            )
+            Text(
+                "Страна производства: ${film.countries.joinToString(", ") { it.country ?: " " }}",
+                fontSize = 17.sp
+            )
 
         }
     }

@@ -6,12 +6,13 @@ sealed class MovieItem {
     abstract val id: Int
     abstract val name: String?
     abstract val nameOriginal: String?
-   // abstract val posterUrl: String?
+
+    // abstract val posterUrl: String?
     //abstract val posterUrlPreview: String?
     abstract val year: String?
     abstract val description: String?
-    // abstract val countries: List<Countries>
-    // abstract val genres: List<Genres>
+    abstract val countries: List<Countries>
+    abstract val genres: List<Genres>
 
 
     data class Movie(
@@ -22,8 +23,8 @@ sealed class MovieItem {
         //@SerializedName("posterUrl") override val posterUrl: String?,
         @SerializedName("year") override val year: String?,
         @SerializedName("description") override val description: String?,
-        // @SerializedName("countries") override val countries: List<Countries>,
-        //@SerializedName("genres") override val genres: List<Genres>
+        @SerializedName("countries") override val countries: List<Countries>,
+        @SerializedName("genres") override val genres: List<Genres>
     ) : MovieItem()
 
     data class Movie2(
@@ -34,8 +35,8 @@ sealed class MovieItem {
         //@SerializedName("posterUrl") override val posterUrl: String?,
         @SerializedName("year") override val year: String?,
         @SerializedName("description") override val description: String?,
-//@SerializedName("countries") override val countries: List<Countries>,
-        //      @SerializedName("genres") override val genres: List<Genres>
+        @SerializedName("countries") override val countries: List<Countries>,
+        @SerializedName("genres") override val genres: List<Genres>
     ) : MovieItem()
 }
 
