@@ -39,10 +39,9 @@ import com.example.filmfinder.viewmodel.FavoritesViewModel
 fun FavoritesScreen(
     onBack: () -> Unit, navController: NavController
 ) {
-
     val context = LocalContext.current
     val dao = MovieDatabase.getInstance(context).movieDao
-    val viewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(dao))
+    val viewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(dao,context))
     val movieState = viewModel.favorMovies
     val errorState = viewModel.error
     LaunchedEffect(Unit) { viewModel.loadFavors() }

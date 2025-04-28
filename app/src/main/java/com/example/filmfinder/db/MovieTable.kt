@@ -17,10 +17,13 @@ data class MovieEntity(
     @ColumnInfo("year") val year: String?,
     @ColumnInfo("description") val description: String?,
     @ColumnInfo("countries") val countries: String?,
-    @ColumnInfo("genres") val genres: String?
+    @ColumnInfo("genres") val genres: String?,
+    @ColumnInfo("posterUrl") val posterUrl: String?,
+    @ColumnInfo("posterUrlPreview") val posterUrlPreview: String?,
+    @ColumnInfo("posterBytes") val posterBytes: ByteArray?
 ) {
     companion object {
-        fun fromMovieItem(movie: MovieItem): MovieEntity {
+        fun fromMovieItem(movie: MovieItem, posterBytes: ByteArray? = null): MovieEntity {
             val countriesList = movie.countries.let { Gson().toJson(it) }
             val genresList = movie.genres.let { Gson().toJson(it) }
             return MovieEntity(
@@ -30,7 +33,10 @@ data class MovieEntity(
                 year = movie.year,
                 description = movie.description,
                 genres = genresList,
-                countries = countriesList
+                countries = countriesList,
+                posterUrl = movie.posterUrl,
+                posterUrlPreview = movie.posterUrlPreview,
+                posterBytes = posterBytes
             )
         }
     }
@@ -49,8 +55,9 @@ data class MovieEntity(
             description = this.description,
             year = this.year,
             countries = countriesList,
-            genres = genresList
+            genres = genresList,
+            posterUrl = posterUrl,
+            posterUrlPreview = posterUrlPreview
         )
     }
-
 }

@@ -4,6 +4,8 @@ package com.example.filmfinder.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
@@ -29,8 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.db.MovieDatabase
 import com.example.filmfinder.factory.DetailsViewModelFactory
@@ -42,7 +46,7 @@ fun DetailsScreen(
 ) {
     val context = LocalContext.current
     val dao = MovieDatabase.getInstance(context).movieDao
-    val viewModel: DetailsViewModel = viewModel(factory = DetailsViewModelFactory(dao))
+    val viewModel: DetailsViewModel = viewModel(factory = DetailsViewModelFactory(dao, context))
     val filmState = viewModel.movie
     val isLoadingState = viewModel.isLoading
     val errorState = viewModel.error
@@ -76,25 +80,25 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavo
         topBar = {
             TopAppBar(
                 title = {
-                Text(
-                    text = film.name ?: film.nameOriginal ?: ""
-                )
-            }, navigationIcon = {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Назад"
+                    Text(
+                        text = film.name ?: film.nameOriginal ?: ""
                     )
-                }
-            }, actions = {
-                IconButton(onClick = addFavor) {
-                    Icon(
-                        imageVector = if (isFavor) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                        tint = if (isFavor) Color.Red else Color.Black,
-                        contentDescription = "Добавить в избранное"
-                    )
-                }
-            }, scrollBehavior = scrollBehavior
+                }, navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Назад"
+                        )
+                    }
+                }, actions = {
+                    IconButton(onClick = addFavor) {
+                        Icon(
+                            imageVector = if (isFavor) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            tint = if (isFavor) Color.Red else Color.Black,
+                            contentDescription = "Добавить в избранное"
+                        )
+                    }
+                }, scrollBehavior = scrollBehavior
             )
         },
     ) { innerPadding ->
@@ -104,13 +108,13 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavo
                 .windowInsetsPadding(WindowInsets.systemBars)
                 .verticalScroll(rememberScrollState())
         ) {
-//            AsyncImage(
-//                model = film.posterUrl,
-//                contentDescription = film.name,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(700.dp)
-//            )
+            AsyncImage(
+                model = film.posterUrl,
+                contentDescription = film.name,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(700.dp)
+            )
 
             Text(
                 text = "Описание: ${film.description ?: " - "}", fontSize = 17.sp

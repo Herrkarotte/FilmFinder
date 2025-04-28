@@ -6,9 +6,8 @@ sealed class MovieItem {
     abstract val id: Int
     abstract val name: String?
     abstract val nameOriginal: String?
-
-    // abstract val posterUrl: String?
-    //abstract val posterUrlPreview: String?
+     abstract val posterUrl: String?
+    abstract val posterUrlPreview: String?
     abstract val year: String?
     abstract val description: String?
     abstract val countries: List<Countries>
@@ -19,8 +18,8 @@ sealed class MovieItem {
         @SerializedName("kinopoiskId") override val id: Int,
         @SerializedName("nameRu") override val name: String?,
         @SerializedName("nameOriginal") override val nameOriginal: String?,
-        //@SerializedName("posterUrlPreview") override val posterUrlPreview: String?,
-        //@SerializedName("posterUrl") override val posterUrl: String?,
+        @SerializedName("posterUrlPreview") override val posterUrlPreview: String?,
+        @SerializedName("posterUrl") override val posterUrl: String?,
         @SerializedName("year") override val year: String?,
         @SerializedName("description") override val description: String?,
         @SerializedName("countries") override val countries: List<Countries>,
@@ -30,9 +29,9 @@ sealed class MovieItem {
     data class Movie2(
         @SerializedName("filmId") override val id: Int,
         @SerializedName("nameRu") override val name: String?,
-        @SerializedName("nameOriginal") override val nameOriginal: String?,
-        //@SerializedName("posterUrlPreview") override val posterUrlPreview: String?,
-        //@SerializedName("posterUrl") override val posterUrl: String?,
+        @SerializedName("nameEn") override val nameOriginal: String?,
+        @SerializedName("posterUrlPreview") override val posterUrlPreview: String?,
+        @SerializedName("posterUrl") override val posterUrl: String?,
         @SerializedName("year") override val year: String?,
         @SerializedName("description") override val description: String?,
         @SerializedName("countries") override val countries: List<Countries>,

@@ -39,7 +39,7 @@ fun FavDetailsScreen(
 ) {
     val context = LocalContext.current
     val dao = MovieDatabase.getInstance(context).movieDao
-    val viewModel: FavDetailsViewModel = viewModel(factory = FavDetailsViewModelFactory(dao))
+    val viewModel: FavDetailsViewModel = viewModel(factory = FavDetailsViewModelFactory(dao,context))
     val filmState = viewModel.movie
     val errorState = viewModel.error
 

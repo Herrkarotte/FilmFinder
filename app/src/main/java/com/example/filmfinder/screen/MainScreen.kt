@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,6 +47,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.db.MovieDatabase
 import com.example.filmfinder.factory.MainViewModelFactory
@@ -56,7 +58,7 @@ import com.example.filmfinder.viewmodel.MainViewModel
 fun MainScreen(navController: NavController) {
     val context = LocalContext.current
     val dao = MovieDatabase.getInstance(context).movieDao
-    val viewModel: MainViewModel = viewModel(factory = MainViewModelFactory(dao))
+    val viewModel: MainViewModel = viewModel(factory = MainViewModelFactory(dao, context))
     val films = viewModel.filmsPagingFlow.collectAsLazyPagingItems()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val focusManager = LocalFocusManager.current
@@ -155,10 +157,10 @@ fun FilmsItem(
                 })
     ) {
         Row(horizontalArrangement = Arrangement.Start) {
-//            AsyncImage(
-//                model = film.posterUrlPreview, contentDescription = film.name,
-//                modifier = Modifier.size(150.dp)
-//            )
+            AsyncImage(
+                model = film.posterUrlPreview, contentDescription = film.name,
+                modifier = Modifier.size(150.dp)
+            )
             Column {
                 Text(
                     film.name ?: film.nameOriginal ?: ""

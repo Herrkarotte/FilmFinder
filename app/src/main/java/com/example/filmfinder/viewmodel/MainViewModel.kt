@@ -17,8 +17,7 @@ class MainViewModel(private val model: FilmModel, private val favModel: FavModel
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
-    private val _isFavor = mutableStateOf(false)
-    val isFavor: State<Boolean> = _isFavor
+
 
     private val _snackBarMessage = mutableStateOf<String?>(null)
     val snackBarMessage: State<String?> = _snackBarMessage
@@ -42,7 +41,7 @@ class MainViewModel(private val model: FilmModel, private val favModel: FavModel
                 favModel.removeFromFavor(movie)
                 _snackBarMessage.value = "Удалено из избранного"
             } else {
-                favModel.addToFavor(movie)
+                favModel.addToFavor(movie, true)
                 _snackBarMessage.value = "Добавлено в избранное"
             }
         }
