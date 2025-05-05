@@ -27,6 +27,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -54,24 +55,6 @@ fun DetailsScreen(
 
 
     LaunchedEffect(id) { viewModel.loadMovie(id) }
-    when {
-        isLoadingState.value -> CircularProgressIndicator()
-        errorState.value != null -> ErrorMessage(
-            error = errorState.value!!
-        )
-
-        filmState.value != null -> FilmDetail(
-            film = filmState.value!!,
-            onBack,
-            addFavor = { viewModel.toggleFavor() },
-            isFavorState.value
-        )
-    }
-
-}
-
-@Composable
-fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavor: Boolean) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier
@@ -80,57 +63,77 @@ fun FilmDetail(film: MovieItem, onBack: () -> Unit, addFavor: () -> Unit, isFavo
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = film.name ?: film.nameOriginal ?: ""
+                Text(
+                    text = filmState.value?.name ?: filmState.value?.nameOriginal ?: ""
+                )
+            }, navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Назад"
                     )
-                }, navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
-                        )
-                    }
-                }, actions = {
-                    IconButton(onClick = addFavor) {
-                        Icon(
-                            imageVector = if (isFavor) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                            tint = if (isFavor) Color.Red else Color.Black,
-                            contentDescription = "Добавить в избранное"
-                        )
-                    }
-                }, scrollBehavior = scrollBehavior
+                }
+            }, actions = {
+                IconButton(onClick = { viewModel.toggleFavor() }) {
+                    Icon(
+                        imageVector = if (isFavorState.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        tint = if (isFavorState.value) Color.Red else Color.Black,
+                        contentDescription = "Добавить в избранное"
+                    )
+                }
+            }, scrollBehavior = scrollBehavior
             )
         },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .windowInsetsPadding(WindowInsets.systemBars)
-                .verticalScroll(rememberScrollState())
+            modifier = Modifier.padding(innerPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                model = film.posterUrl,
-                contentDescription = film.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(700.dp)
-            )
+            when {
+                isLoadingState.value -> CircularProgressIndicator()
+                errorState.value != null -> ErrorMessage(
+                    error = errorState.value!!
+                )
 
-            Text(
-                text = "Описание: ${film.description ?: " - "}", fontSize = 17.sp
-            )
-            Text(
-                text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: " " }}",
-                fontSize = 17.sp
-            )
-            Text(
-                "Страна производства: ${film.countries.joinToString(", ") { it.country ?: " " }}",
-                fontSize = 17.sp
-            )
-
+                filmState.value != null -> FilmDetail(
+                    film = filmState.value!!,
+                )
+            }
         }
+
     }
 }
+
+@Composable
+fun FilmDetail(film: MovieItem) {
+
+    Column(
+        modifier = Modifier
+            .windowInsetsPadding(WindowInsets.systemBars)
+            .verticalScroll(rememberScrollState())
+    ) {
+        AsyncImage(
+            model = film.posterUrl,
+            contentDescription = film.name,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(700.dp)
+        )
+
+        Text(
+            text = "Описание: ${film.description ?: " - "}", fontSize = 17.sp
+        )
+        Text(
+            text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: " " }}", fontSize = 17.sp
+        )
+        Text(
+            "Страна производства: ${film.countries.joinToString(", ") { it.country ?: " " }}",
+            fontSize = 17.sp
+        )
+
+    }
+}
+
 
 @Composable
 private fun ErrorMessage(error: String) {
