@@ -2,19 +2,21 @@ package com.example.filmfinder.model
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import android.util.Log
+import coil3.BitmapImage
 import coil3.ImageLoader
 import coil3.request.ImageRequest
+import coil3.size.Size
 import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.db.MovieDao
 import com.example.filmfinder.db.MovieEntity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+
 
 class FavModel(
     private val movieDao: MovieDao,
@@ -34,26 +36,40 @@ class FavModel(
 
     suspend fun addToFavor(movie: MovieItem, savePoster: Boolean = true) {
         withContext(Dispatchers.IO) {
-            val posterBytes = if (savePoster && movie.posterUrl != null) {
-                loadImageBytes(movie.posterUrl!!)
+            val (posterBytes, previewPosterBytes) = if (savePoster && (!movie.posterUrl.isNullOrEmpty() || !movie.posterUrlPreview.isNullOrEmpty())) {
+                try {
+                    val poster = async { movie.posterUrl?.let { loadImageBytes(it) } }
+                    val previewPoster = async { movie.posterUrlPreview?.let { loadImageBytes(it) } }
+                    Pair(poster.await(), previewPoster.await())
+                } catch (e: Exception) {
+                    Pair(null, null)
+                }
             } else {
-                null
+                Pair(null, null)
             }
-            movieDao.insert(MovieEntity.fromMovieItem(movie, posterBytes))
+            movieDao.insert(MovieEntity.fromMovieItem(movie, posterBytes, previewPosterBytes))
         }
     }
 
-    private suspend fun loadImageBytes(url: String): ByteArray {
-        return suspendCoroutine { countinuation ->
-            val request = ImageRequest.Builder(context)
-                .data(url)
-                .target { drawable ->
-                    val bitmap = (drawable as BitmapDrawable).bitmap
+    private suspend fun loadImageBytes(url: String): ByteArray? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val request = ImageRequest.Builder(context).data(url).size(Size.ORIGINAL).build()
+
+                val imageResult = imageLoader.execute(request)
+                val image = imageResult.image
+                if (image is BitmapImage) {
+                    val bitmap = image.bitmap
                     val stream = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
-                    countinuation.resume(stream.toByteArray())
-                }.build()
-            imageLoader.enqueue(request)
+                    stream.toByteArray()
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e("FavModel", "Error loading image bytes", e)
+                null
+            }
         }
     }
 
