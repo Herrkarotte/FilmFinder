@@ -4,6 +4,8 @@ package com.example.filmfinder.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.systemBars
@@ -26,8 +28,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.db.MovieDatabase
 import com.example.filmfinder.factory.FavDetailsViewModelFactory
@@ -39,24 +43,13 @@ fun FavDetailsScreen(
 ) {
     val context = LocalContext.current
     val dao = MovieDatabase.getInstance(context).movieDao
-    val viewModel: FavDetailsViewModel = viewModel(factory = FavDetailsViewModelFactory(dao,context))
+    val viewModel: FavDetailsViewModel =
+        viewModel(factory = FavDetailsViewModelFactory(dao, context))
     val filmState = viewModel.movie
     val errorState = viewModel.error
+    val posterState = viewModel.posterBiteArray
 
     LaunchedEffect(movieId) { viewModel.loadMovie(movieId) }
-
-    when {
-        errorState.value != null -> ErrorMessage(error = errorState.value!!)
-        filmState.value != null -> FavFilmDetail(
-            film = filmState.value!!,
-            onBack = onBack,
-            deleteFromFavor = { viewModel.deleteFromFavor() },
-        )
-    }
-}
-
-@Composable
-fun FavFilmDetail(film: MovieItem, onBack: () -> Unit, deleteFromFavor: () -> Unit) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(
         modifier = Modifier
@@ -65,7 +58,7 @@ fun FavFilmDetail(film: MovieItem, onBack: () -> Unit, deleteFromFavor: () -> Un
             TopAppBar(
                 title = {
                 Text(
-                    text = film.name ?: film.nameOriginal ?: ""
+                    text = filmState.value?.name ?: filmState.value?.nameOriginal ?: ""
                 )
             }, navigationIcon = {
                 IconButton(onClick = onBack) {
@@ -75,7 +68,7 @@ fun FavFilmDetail(film: MovieItem, onBack: () -> Unit, deleteFromFavor: () -> Un
                     )
                 }
             }, actions = {
-                IconButton(onClick = deleteFromFavor) {
+                IconButton(onClick = { viewModel.deleteFromFavor() }) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = "Удалить из избранного"
@@ -90,19 +83,39 @@ fun FavFilmDetail(film: MovieItem, onBack: () -> Unit, deleteFromFavor: () -> Un
                 .windowInsetsPadding(WindowInsets.systemBars)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = "Описание: ${film.description ?: "-"}", fontSize = 17.sp
-            )
-            Text(
-                text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: "" }}",
-                fontSize = 17.sp
-            )
-            Text(
-                text = "Страна производства: ${film.countries.joinToString(", ") { it.country ?: "" }}",
-                fontSize = 17.sp
-            )
+            when {
+                errorState.value != null -> ErrorMessage(error = errorState.value!!)
+                filmState.value != null -> FavFilmDetail(
+                    poster = posterState.value, film = filmState.value!!
+                )
+            }
         }
     }
+}
+
+@Composable
+fun FavFilmDetail(
+    poster: ByteArray?, film: MovieItem
+) {
+    if (poster != null) {
+        AsyncImage(
+            model = poster,
+            contentDescription = film.name,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(700.dp)
+        )
+    }
+    Text(
+        text = "Описание: ${film.description ?: "-"}", fontSize = 17.sp
+    )
+    Text(
+        text = "Жанр: ${film.genres.joinToString(", ") { it.genre ?: "" }}", fontSize = 17.sp
+    )
+    Text(
+        text = "Страна производства: ${film.countries.joinToString(", ") { it.country ?: "" }}",
+        fontSize = 17.sp
+    )
 }
 
 
