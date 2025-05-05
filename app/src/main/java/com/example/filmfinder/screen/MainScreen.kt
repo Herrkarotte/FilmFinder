@@ -158,7 +158,8 @@ fun FilmsItem(
     ) {
         Row(horizontalArrangement = Arrangement.Start) {
             AsyncImage(
-                model = film.posterUrlPreview, contentDescription = film.name,
+                model = film.posterUrlPreview,
+                contentDescription = film.name,
                 modifier = Modifier.size(150.dp)
             )
             Column {
@@ -191,6 +192,3 @@ private fun ErrorMessage(error: String) {
         text = "Ошибка $error"
     )
 }
-
-
-
