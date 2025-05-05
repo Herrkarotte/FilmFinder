@@ -15,6 +15,8 @@ class FavoritesViewModel(private val model: FavModel) : ViewModel() {
 
     private val _error = mutableStateOf<String?>(null)
     val error: State<String?> = _error
+    private val _previewPosterBiteArray = mutableStateOf<Map<Int, ByteArray?>>(emptyMap())
+    val previewPosterBiteArray: State<Map<Int, ByteArray?>> = _previewPosterBiteArray
 
     private var job: Job? = null
 
@@ -24,8 +26,13 @@ class FavoritesViewModel(private val model: FavModel) : ViewModel() {
             _error.value = null
             try {
                 model.getFavors().collect { movies ->
-                        _favorMovies.value = movies
+                    _favorMovies.value = movies
+                    val posters = mutableMapOf<Int, ByteArray?>()
+                    movies.forEach { movie ->
+                        posters[movie.id] = model.getMoviePosterBytes(movie.id)
                     }
+                    _previewPosterBiteArray.value = posters
+                }
             } catch (e: Exception) {
                 _error.value = e.message ?: "Loading error"
             }

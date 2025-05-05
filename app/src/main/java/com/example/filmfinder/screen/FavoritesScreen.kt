@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -29,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.example.filmfinder.data.MovieItem
 import com.example.filmfinder.db.MovieDatabase
 import com.example.filmfinder.factory.FavoritesViewModelFactory
@@ -41,9 +43,10 @@ fun FavoritesScreen(
 ) {
     val context = LocalContext.current
     val dao = MovieDatabase.getInstance(context).movieDao
-    val viewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(dao,context))
+    val viewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(dao, context))
     val movieState = viewModel.favorMovies
     val errorState = viewModel.error
+    val previewPostersState = viewModel.previewPosterBiteArray
     LaunchedEffect(Unit) { viewModel.loadFavors() }
     Scaffold(
         topBar = {
@@ -69,7 +72,11 @@ fun FavoritesScreen(
                     if (movieState.value?.isEmpty() == true) {
                         Text("Список пуст")
                     } else {
-                        MovieList(movies = movieState.value!!, navController)
+                        MovieList(
+                            movies = movieState.value!!,
+                            navController,
+                            previewPostersState.value
+                        )
                     }
                 }
 
@@ -80,16 +87,20 @@ fun FavoritesScreen(
 }
 
 @Composable
-fun MovieList(movies: List<MovieItem.Movie>, navController: NavController) {
+fun MovieList(
+    movies: List<MovieItem.Movie>,
+    navController: NavController,
+    previewPoster: Map<Int, ByteArray?>
+) {
     LazyColumn {
         items(movies) { movie ->
-            MoviesItem(movie, navController)
+            MoviesItem(movie, navController, previewPoster = previewPoster[movie.id])
         }
     }
 }
 
 @Composable
-fun MoviesItem(movie: MovieItem.Movie, navController: NavController) {
+fun MoviesItem(movie: MovieItem.Movie, navController: NavController, previewPoster: ByteArray?) {
     Card(
         modifier = Modifier
             .padding(8.dp)
@@ -99,6 +110,13 @@ fun MoviesItem(movie: MovieItem.Movie, navController: NavController) {
                 navController.navigate(Screen.FavDetailsScreen.createRout(movie.id))
             }) {
         Row(horizontalArrangement = Arrangement.Start) {
+            if (previewPoster != null) {
+                AsyncImage(
+                    model = previewPoster,
+                    contentDescription = movie.name,
+                    modifier = Modifier.size(150.dp)
+                )
+            }
             Column {
                 Text(
                     movie.name ?: movie.nameOriginal ?: ""
